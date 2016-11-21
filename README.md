@@ -1,4 +1,8 @@
 
+
+
+Magic mirror is built on top of the React + flask starter kit [https://github.com/bonniee/react-flask](https://github.com/bonniee/react-flask)
+
 # React + Flask starter kit
 
 A quick starter repo that includes Flask and React, with Babel and Webpack. For proof-of-concept projects, workshop settings, etc where you don't want to worry about developer setup or writing config files.

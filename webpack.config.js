@@ -1,7 +1,7 @@
 var webpack = require('webpack');  
 module.exports = {  
   entry: [
-    "./js/app.js"
+    "./assets/app.js"
   ],
   output: {
     path: __dirname + '/static',
@@ -16,8 +16,12 @@ module.exports = {
           presets: ['es2015', 'react']
         },
         exclude: /node_modules/
+      },
+      {
+        test: /\.scss$/,
+        loaders: ['style', 'css', 'sass']
       }
-    ]
+    ],
   },
   plugins: [
   ]

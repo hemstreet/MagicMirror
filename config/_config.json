@@ -1,0 +1,10 @@
+{
+  "weather": {
+    "key": "123456789123456789",
+    "wunderground" : {
+      "conditions": "http://api.wunderground.com/api/123456789123456789/conditions/q/{{state}}/{{city}}.json",
+      "hourly": "http://api.wunderground.com/api/123456789123456789/hourly/q/{{state}}/{{city}}.json",
+      "radar": "http://api.wunderground.com/api/123456789123456789/radar/image.gif?centerlat={{centerLatOfCity}}&centerlon={{centerLonOfCity}}&radius=100&width=280&height=280&newmaps=1"
+    }
+  }
+}
