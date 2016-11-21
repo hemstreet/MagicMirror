@@ -7,8 +7,7 @@ import '../../index.scss';
 export default React.createClass({
     render() {
         return (
-            <div>
-                <h1>Mirror</h1>
+            <div className="Mirror">
                 <Time/>
                 <Weather/>
             </div>

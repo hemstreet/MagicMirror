@@ -1,7 +1,6 @@
-
-
-
 Magic mirror is built on top of the React + flask starter kit [https://github.com/bonniee/react-flask](https://github.com/bonniee/react-flask)
+
+[Future Enhancements](./docs/enhancements.md)
 
 # React + Flask starter kit
 
