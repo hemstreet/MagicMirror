@@ -17,9 +17,9 @@ export default React.createClass({
         this.setTime();
     },
     componentDidMount: function(){
-        window.setInterval(function () {
+        window.setInterval(() =>  {
             this.setTime();
-        }.bind(this), 1000);
+        }, 1000);
     },
     render: function() {
 
