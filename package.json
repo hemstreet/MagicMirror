@@ -23,8 +23,11 @@
     "webpack": "^1.12.12"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "google-calendar": "^1.3.2",
     "jquery": "^3.1.1",
+    "json-loader": "^0.5.4",
+    "mediator": "0.0.7",
     "moment": "^2.16.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",

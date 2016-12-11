@@ -2,26 +2,26 @@ import React from 'react';
 import moment from 'moment';
 
 export default React.createClass({
-    setTime: function(){
+    setTime(){
 
-        let currentTime = moment()
+        let currentTime = moment();
         var date = currentTime.format('MMMM Do'); // November 20th
-        var time = moment().format('H:mm:ss');    // 14:16:42
+        var time = currentTime.format('H:mm:ss');    // 14:16:42
 
         this.setState({
             date,
             time
         });
     },
-    componentWillMount: function(){
+    componentWillMount(){
         this.setTime();
     },
-    componentDidMount: function(){
+    componentDidMount(){
         window.setInterval(() =>  {
             this.setTime();
         }, 1000);
     },
-    render: function() {
+    render() {
 
         return(
             <div className="Moment-time" ref="timeRow">

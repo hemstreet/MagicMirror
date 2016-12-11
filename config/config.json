@@ -1,0 +1,28 @@
+{
+  "events" : {
+    "displayFlash": "FLASH:displayFlash"
+  },
+  "calendar": {
+    "google": "286519059198-2tsu514cgqc0njd9dkstlrjn137j77up.apps.googleusercontent.com"
+  },
+  "travel" : {
+    "key": "AIzaSyCp5wFW4rgjkS90ANgYn7GCtLDTjXxU1kY",
+    "origin" : "11342 W lake dr littleton co 80127",
+    "work" : "360 S inverness dr",
+    "dimensions" : {
+      "width": 500,
+      "height": 400
+    }
+  },
+  "weather": {
+    "openweathermap": {
+      "key": "fc2d32015a4e6791b7fb52aa605a85c8"
+    },
+    "wunderground" : {
+      "key": "4f78cbf0084eb9e4",
+      "conditions": "http://api.wunderground.com/api/4f78cbf0084eb9e4/conditions/q/CO/Littleton.json",
+      "hourly": "http://api.wunderground.com/api/4f78cbf0084eb9e4/hourly/q/CO/Littleton.json",
+      "radar": "http://api.wunderground.com/api/4f78cbf0084eb9e4/radar/image.gif?centerlat=38&centerlon=-{{centerLon}}&radius=100&width=280&height=280&newmaps=1"
+    }
+  }
+}
