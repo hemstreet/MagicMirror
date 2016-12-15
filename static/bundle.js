@@ -35290,7 +35290,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  font-family: 'UniqueRegular';\n  font-weight: normal;\n  font-style: normal; }\n\nbody {\n  background: #000;\n  color: #fff; }\n\n.Mirror {\n  position: absolute;\n  font-size: 2em;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0; }\n  .Mirror-section {\n    position: absolute; }\n    .Mirror-section--top {\n      top: 0; }\n    .Mirror-section--right {\n      right: 0; }\n    .Mirror-section--bottom {\n      bottom: 0; }\n    .Mirror-section--left {\n      left: 0; }\n", ""]);
+	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\nbody {\n  font-family: 'UniqueRegular';\n  font-weight: normal;\n  font-style: normal; }\n\nbody {\n  background: #000;\n  color: #fff; }\n\n.Mirror {\n  position: absolute;\n  font-size: 2em;\n  top: 0;\n  right: 0;\n  bottom: 10px;\n  left: 0; }\n  .Mirror-section {\n    position: absolute; }\n    .Mirror-section--top {\n      top: 0; }\n    .Mirror-section--right {\n      right: 0; }\n    .Mirror-section--bottom {\n      bottom: 0; }\n    .Mirror-section--left {\n      left: 0; }\n", ""]);
 
 	// exports
 
@@ -35533,17 +35533,22 @@
 	exports.default = _react2.default.createClass({
 	    displayName: 'Flash',
 	    componentWillMount: function componentWillMount() {
+	        this.messages = {};
+
 	        this.setState({
-	            message: null
+	            messages: this.messages
 	        });
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this.setupListeners();
 	    },
 	    setupListeners: function setupListeners() {
-	        // mediator.on(config.events.displayFlash, this.displayFlash);
+	        _mediator2.default.on(config.events.displayFlash, this.displayFlash);
 	    },
 	    displayFlash: function displayFlash(message) {
+	        this.message[message] = message;
+
+	        // set timeout for message
 	        this.setState({
 	            message: message
 	        });
@@ -35553,7 +35558,7 @@
 	            'div',
 	            { className: 'Flash' },
 	            'Flash',
-	            this.state.message
+	            this.state.messages
 	        );
 	    }
 	});

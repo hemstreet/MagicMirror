@@ -4,17 +4,22 @@ var config = require('json-loader!../../../config/config.json');
 
 export default React.createClass({
     componentWillMount() {
+        this.messages = {};
+
         this.setState({
-            message: null
+            messages: this.messages
         })
     },
     componentDidMount() {
         this.setupListeners();
     },
     setupListeners() {
-        // mediator.on(config.events.displayFlash, this.displayFlash);
+        mediator.on(config.events.displayFlash, this.displayFlash);
     },
     displayFlash(message) {
+        this.message[message] = message;
+
+        // set timeout for message
         this.setState({
             message
         })
@@ -23,7 +28,7 @@ export default React.createClass({
         return(
             <div className="Flash">
                 Flash
-                {this.state.message}
+                {this.state.messages}
             </div>
         )
     }
