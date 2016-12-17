@@ -35522,18 +35522,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _mediator = __webpack_require__(500);
-
-	var _mediator2 = _interopRequireDefault(_mediator);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var mediator = __webpack_require__(500);
 	var config = __webpack_require__(498);
 
 	exports.default = _react2.default.createClass({
 	    displayName: 'Flash',
 	    componentWillMount: function componentWillMount() {
-	        this.messages = {};
+	        this.messages = ''; //{};
 
 	        this.setState({
 	            messages: this.messages
@@ -35543,7 +35540,7 @@
 	        this.setupListeners();
 	    },
 	    setupListeners: function setupListeners() {
-	        _mediator2.default.on(config.events.displayFlash, this.displayFlash);
+	        mediator.on(config.events.displayFlash, this.displayFlash);
 	    },
 	    displayFlash: function displayFlash(message) {
 	        this.message[message] = message;

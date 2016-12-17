@@ -1,10 +1,10 @@
 import React from 'react';
-import mediator from 'mediator';
+var mediator = require('mediator');
 var config = require('json-loader!../../../config/config.json');
 
 export default React.createClass({
     componentWillMount() {
-        this.messages = {};
+        this.messages = ''; //{};
 
         this.setState({
             messages: this.messages
