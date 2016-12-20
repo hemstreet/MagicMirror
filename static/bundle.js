@@ -19914,9 +19914,11 @@
 	    },
 	    updateData: function updateData() {
 	        // Update the data for the UI
+	        var tempInKelvin = citiesWeather[currentCity].main.temp;
 	        this.setState({
 	            weather: citiesWeather[currentCity].weather[0].id,
-	            temp: Math.round(citiesWeather[currentCity].main.temp - 273.15), // Kelvin to Celcius
+	            // temp: Math.round(citiesWeather[currentCity].main.temp - 273.15), // Kelvin to Celcius
+	            temp: Math.round(1.8 * (tempInKelvin - 273) + 32), // Kelvin to Fahrenheit
 	            humidity: Math.round(citiesWeather[currentCity].main.humidity),
 	            wind: Math.round(citiesWeather[currentCity].wind.speed)
 	        });
