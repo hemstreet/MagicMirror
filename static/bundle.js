@@ -61,7 +61,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _Mirror = __webpack_require__(502);
+	var _Mirror = __webpack_require__(160);
 
 	var _Mirror2 = _interopRequireDefault(_Mirror);
 
@@ -19764,8 +19764,214 @@
 
 
 /***/ },
-/* 160 */,
-/* 161 */,
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Weather = __webpack_require__(161);
+
+	var _Weather2 = _interopRequireDefault(_Weather);
+
+	var _Time = __webpack_require__(168);
+
+	var _Time2 = _interopRequireDefault(_Time);
+
+	var _Travel = __webpack_require__(280);
+
+	var _Travel2 = _interopRequireDefault(_Travel);
+
+	var _Flash = __webpack_require__(284);
+
+	var _Flash2 = _interopRequireDefault(_Flash);
+
+	__webpack_require__(286);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	    displayName: 'Mirror',
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'Mirror' },
+	            _react2.default.createElement(_Flash2.default, null),
+	            _react2.default.createElement('div', { className: 'Mirror-section Mirror-section--top Mirror-section--left' }),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'Mirror-section Mirror-section--top Mirror-section--right' },
+	                _react2.default.createElement(_Time2.default, null)
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'Mirror-section Mirror-section--bottom Mirror-section--left' },
+	                _react2.default.createElement(_Travel2.default, null)
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'Mirror-section Mirror-section--bottom Mirror-section--right' },
+	                _react2.default.createElement(_Weather2.default, null)
+	            )
+	        );
+	    }
+	});
+
+	// import GoogleCalendar from '../Calendar/GoogleCalendar';
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _WeatherRequest = __webpack_require__(162);
+
+	var _WeatherRequest2 = _interopRequireDefault(_WeatherRequest);
+
+	__webpack_require__(163);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var classNames = __webpack_require__(167); /**
+	                                         * Main functionality from http://joanmira.com/tutorial-build-a-weather-app-with-react/
+	                                         */
+
+	var query = ''; // Expects something like this ?city=London,Paris,Berlin,Madrid
+	var cities = ['Littleton']; // Transform query string cities into an array
+	var citiesWeather = []; // API cache
+	var currentCity = 0; // Index of current city displayed
+
+	exports.default = _react2.default.createClass({
+	    displayName: 'Weather',
+	    getInitialState: function getInitialState() {
+	        return {
+	            weather: '',
+	            temp: 0,
+	            humidity: 0,
+	            wind: 0
+	        };
+	    },
+	    componentWillMount: function componentWillMount() {
+	        var _this = this;
+
+	        // Get the query string data
+	        query = location.search.split('=')[1];
+
+	        // Figure out if we need to display more than one city's weather
+	        if (query !== undefined) {
+	            cities = query.split(','); // Get an array of city names
+
+	            // Set the interval to load new cities
+	            if (cities.length > 1) {
+	                setInterval(function () {
+	                    currentCity++;
+	                    if (currentCity === cities.length) {
+	                        currentCity = 0;
+	                    }
+	                    _this.fetchData(); // Reload the city every 5 seconds
+	                }, 5000);
+	            }
+	        } else {
+	            cities[0] = 'Littleton'; // Set Littleton as the default city
+	        }
+
+	        // Create a timer to clear the cache after 5 minutes, so we can get updated data from the API
+	        setInterval(function () {
+	            citiesWeather = []; // Empty the cache
+	        }, 1000 * 60 * 5);
+
+	        this.fetchData();
+	    },
+	    fetchData: function fetchData() {
+	        var _this2 = this;
+
+	        // Get the data from the cache if possible
+	        if (citiesWeather[currentCity]) {
+	            this.updateData();
+	        } else {
+	            // Request new data to the API
+	            _WeatherRequest2.default.get(cities[currentCity]).then(function (data) {
+	                citiesWeather[currentCity] = data;
+	                _this2.updateData();
+	            });
+	        }
+	    },
+	    updateData: function updateData() {
+	        // Update the data for the UI
+	        this.setState({
+	            weather: citiesWeather[currentCity].weather[0].id,
+	            temp: Math.round(citiesWeather[currentCity].main.temp - 273.15), // Kelvin to Celcius
+	            humidity: Math.round(citiesWeather[currentCity].main.humidity),
+	            wind: Math.round(citiesWeather[currentCity].wind.speed)
+	        });
+	    },
+	    render: function render() {
+	        // Build class names with dynamic data
+	        var weatherClass = classNames('wi wi-owm-' + this.state.weather);
+
+	        // Render the DOM elements
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'Weather' },
+	            _react2.default.createElement(
+	                'h1',
+	                { className: 'Weather-city' },
+	                cities[currentCity]
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'Weather-icon' },
+	                _react2.default.createElement('i', { className: weatherClass })
+	            ),
+	            _react2.default.createElement(
+	                'section',
+	                { className: 'Weather-details' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'Weather-temp' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'Weather-temp-number' },
+	                        this.state.temp
+	                    ),
+	                    _react2.default.createElement('span', { className: 'wi wi-degrees' })
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'Weather-wind' },
+	                    _react2.default.createElement(
+	                        'i',
+	                        { className: 'wi wi-small-craft-advisory' },
+	                        this.state.wind,
+	                        _react2.default.createElement(
+	                            'span',
+	                            { className: 'vel' },
+	                            'Km/h'
+	                        )
+	                    )
+	                )
+	            )
+	        );
+	    }
+	});
+
+/***/ },
 /* 162 */
 /***/ function(module, exports) {
 
@@ -20190,7 +20396,61 @@
 
 
 /***/ },
-/* 168 */,
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _moment = __webpack_require__(169);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	    displayName: 'Time',
+	    setTime: function setTime() {
+
+	        var currentTime = (0, _moment2.default)();
+	        var date = currentTime.format('MMMM Do'); // November 20th
+	        var time = currentTime.format('H:mm:ss'); // 14:16:42
+
+	        this.setState({
+	            date: date,
+	            time: time
+	        });
+	    },
+	    componentWillMount: function componentWillMount() {
+	        this.setTime();
+	    },
+	    componentDidMount: function componentDidMount() {
+	        var _this = this;
+
+	        window.setInterval(function () {
+	            _this.setTime();
+	        }, 1000);
+	    },
+	    render: function render() {
+
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'Moment-time', ref: 'timeRow' },
+	            this.state.date,
+	            _react2.default.createElement('br', null),
+	            this.state.time
+	        );
+	    }
+	});
+
+/***/ },
 /* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -35043,266 +35303,96 @@
 
 
 /***/ },
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */,
-/* 284 */,
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */,
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
-/* 379 */,
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */,
-/* 394 */,
-/* 395 */,
-/* 396 */,
-/* 397 */,
-/* 398 */,
-/* 399 */,
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */,
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */,
-/* 409 */,
-/* 410 */,
-/* 411 */,
-/* 412 */,
-/* 413 */,
-/* 414 */,
-/* 415 */,
-/* 416 */,
-/* 417 */,
-/* 418 */,
-/* 419 */,
-/* 420 */,
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */,
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */,
-/* 434 */,
-/* 435 */,
-/* 436 */,
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */,
-/* 443 */,
-/* 444 */,
-/* 445 */,
-/* 446 */,
-/* 447 */,
-/* 448 */,
-/* 449 */,
-/* 450 */,
-/* 451 */,
-/* 452 */,
-/* 453 */,
-/* 454 */,
-/* 455 */,
-/* 456 */,
-/* 457 */,
-/* 458 */,
-/* 459 */,
-/* 460 */,
-/* 461 */,
-/* 462 */,
-/* 463 */,
-/* 464 */,
-/* 465 */,
-/* 466 */,
-/* 467 */,
-/* 468 */,
-/* 469 */,
-/* 470 */,
-/* 471 */,
-/* 472 */,
-/* 473 */,
-/* 474 */,
-/* 475 */,
-/* 476 */,
-/* 477 */,
-/* 478 */,
-/* 479 */,
-/* 480 */,
-/* 481 */,
-/* 482 */,
-/* 483 */,
-/* 484 */,
-/* 485 */,
-/* 486 */,
-/* 487 */,
-/* 488 */,
-/* 489 */,
-/* 490 */,
-/* 491 */,
-/* 492 */,
-/* 493 */
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	__webpack_require__(281);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var config = __webpack_require__(283);
+	exports.default = _react2.default.createClass({
+	    displayName: 'Travel',
+	    componentWillMount: function componentWillMount() {
+
+	        this.options = config.travel;
+
+	        this.updateData();
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this.startPolling();
+	    },
+	    getTravelUrl: function getTravelUrl() {
+	        return 'https://www.google.com/maps/embed/v1/directions?key=' + this.options.key + '&origin=' + this.options.origin + '&destination=' + this.options.work;
+	    },
+	    setTravelUrl: function setTravelUrl(origin, destination) {
+	        this.options.origin = origin;
+	        this.options.destination = destination;
+	    },
+
+
+	    /**
+	     * Setup options, object literal w/ width and height as params
+	     * @param dimensions
+	     */
+	    setDimensions: function setDimensions(dimensions) {
+	        this.options.dimensions = dimensions;
+	    },
+	    updateData: function updateData() {
+
+	        var dimensions = this.options.dimensions;
+	        // We have to empty out url for it to refresh the dom
+	        this.setState({
+	            url: '',
+	            dimensions: dimensions
+	        });
+
+	        this.setState({
+	            url: this.getTravelUrl(),
+	            dimensions: dimensions
+	        });
+	    },
+	    startPolling: function startPolling() {
+	        var _this = this;
+
+	        // Every minute reset url to get latest travel time
+	        var interval = 1000 * 60;
+
+	        this.interval = setInterval(function () {
+	            _this.updateData();
+	        }, interval);
+	    },
+	    render: function render() {
+
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'Travel' },
+	            _react2.default.createElement('iframe', { className: 'Travel-iframe', id: 'Travel-iframe', src: this.state.url, width: this.state.dimensions.width, height: this.state.dimensions.height })
+	        );
+	    },
+	    componentWillUnmount: function componentWillUnmount() {
+	        clearInterval(this.interval);
+	    }
+	});
+
+/***/ },
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(494);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(166)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
-				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 494 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(165)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\nbody {\n  font-family: 'UniqueRegular';\n  font-weight: normal;\n  font-style: normal; }\n\nbody {\n  background: #000;\n  color: #fff; }\n\n.Mirror {\n  position: absolute;\n  font-size: 2em;\n  top: 0;\n  right: 0;\n  bottom: 10px;\n  left: 0; }\n  .Mirror-section {\n    position: absolute; }\n    .Mirror-section--top {\n      top: 0; }\n    .Mirror-section--right {\n      right: 0; }\n    .Mirror-section--bottom {\n      bottom: 0; }\n    .Mirror-section--left {\n      left: 0; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 495 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(496);
+	var content = __webpack_require__(282);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(166)(content, {});
@@ -35322,7 +35412,7 @@
 	}
 
 /***/ },
-/* 496 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(165)();
@@ -35336,8 +35426,7 @@
 
 
 /***/ },
-/* 497 */,
-/* 498 */
+/* 283 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -35370,8 +35459,59 @@
 	};
 
 /***/ },
-/* 499 */,
-/* 500 */
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mediator = __webpack_require__(285);
+	var config = __webpack_require__(283);
+
+	exports.default = _react2.default.createClass({
+	    displayName: 'Flash',
+	    componentWillMount: function componentWillMount() {
+	        this.messages = ''; //{};
+
+	        this.setState({
+	            messages: this.messages
+	        });
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this.setupListeners();
+	    },
+	    setupListeners: function setupListeners() {
+	        //mediator.on(config.events.displayFlash, this.displayFlash);
+	    },
+	    displayFlash: function displayFlash(message) {
+	        this.message[message] = message;
+
+	        // set timeout for message
+	        this.setState({
+	            message: message
+	        });
+	    },
+	    render: function render() {
+	        return _react2.default.createElement(
+	            'div',
+	            { className: 'Flash' },
+	            'Flash',
+	            this.state.messages
+	        );
+	    }
+	});
+
+/***/ },
+/* 285 */
 /***/ function(module, exports) {
 
 	var Mediator = function(){
@@ -35509,402 +35649,44 @@
 	};
 
 /***/ },
-/* 501 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	// style-loader: Adds some css to the DOM by adding a <style> tag
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mediator = __webpack_require__(500);
-	var config = __webpack_require__(498);
-
-	exports.default = _react2.default.createClass({
-	    displayName: 'Flash',
-	    componentWillMount: function componentWillMount() {
-	        this.messages = ''; //{};
-
-	        this.setState({
-	            messages: this.messages
-	        });
-	    },
-	    componentDidMount: function componentDidMount() {
-	        this.setupListeners();
-	    },
-	    setupListeners: function setupListeners() {
-	        mediator.on(config.events.displayFlash, this.displayFlash);
-	    },
-	    displayFlash: function displayFlash(message) {
-	        this.message[message] = message;
-
-	        // set timeout for message
-	        this.setState({
-	            message: message
-	        });
-	    },
-	    render: function render() {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'Flash' },
-	            'Flash',
-	            this.state.messages
-	        );
-	    }
-	});
+	// load the styles
+	var content = __webpack_require__(287);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(166)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss", function() {
+				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./index.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
 
 /***/ },
-/* 502 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	exports = module.exports = __webpack_require__(165)();
+	// imports
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
 
-	var _react = __webpack_require__(2);
+	// module
+	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\nbody {\n  font-family: 'UniqueRegular';\n  font-weight: normal;\n  font-style: normal; }\n\nbody {\n  background: #000;\n  color: #fff; }\n\n.Mirror {\n  position: absolute;\n  font-size: 2em;\n  top: 0;\n  right: 0;\n  bottom: 10px;\n  left: 0; }\n  .Mirror-section {\n    position: absolute; }\n    .Mirror-section--top {\n      top: 0; }\n    .Mirror-section--right {\n      right: 0; }\n    .Mirror-section--bottom {\n      bottom: 0; }\n    .Mirror-section--left {\n      left: 0; }\n", ""]);
 
-	var _react2 = _interopRequireDefault(_react);
+	// exports
 
-	var _Weather = __webpack_require__(503);
-
-	var _Weather2 = _interopRequireDefault(_Weather);
-
-	var _Time = __webpack_require__(504);
-
-	var _Time2 = _interopRequireDefault(_Time);
-
-	var _Travel = __webpack_require__(505);
-
-	var _Travel2 = _interopRequireDefault(_Travel);
-
-	var _Flash = __webpack_require__(501);
-
-	var _Flash2 = _interopRequireDefault(_Flash);
-
-	__webpack_require__(493);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	    displayName: 'Mirror',
-	    render: function render() {
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'Mirror' },
-	            _react2.default.createElement(_Flash2.default, null),
-	            _react2.default.createElement('div', { className: 'Mirror-section Mirror-section--top Mirror-section--left' }),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'Mirror-section Mirror-section--top Mirror-section--right' },
-	                _react2.default.createElement(_Time2.default, null)
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'Mirror-section Mirror-section--bottom Mirror-section--left' },
-	                _react2.default.createElement(_Travel2.default, null)
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'Mirror-section Mirror-section--bottom Mirror-section--right' },
-	                _react2.default.createElement(_Weather2.default, null)
-	            )
-	        );
-	    }
-	});
-
-	// import GoogleCalendar from '../Calendar/GoogleCalendar';
-
-/***/ },
-/* 503 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _WeatherRequest = __webpack_require__(162);
-
-	var _WeatherRequest2 = _interopRequireDefault(_WeatherRequest);
-
-	__webpack_require__(163);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var classNames = __webpack_require__(167); /**
-	                                         * Main functionality from http://joanmira.com/tutorial-build-a-weather-app-with-react/
-	                                         */
-
-	var query = ''; // Expects something like this ?city=London,Paris,Berlin,Madrid
-	var cities = ['Littleton']; // Transform query string cities into an array
-	var citiesWeather = []; // API cache
-	var currentCity = 0; // Index of current city displayed
-
-	exports.default = _react2.default.createClass({
-	    displayName: 'Weather',
-	    getInitialState: function getInitialState() {
-	        return {
-	            weather: '',
-	            temp: 0,
-	            humidity: 0,
-	            wind: 0
-	        };
-	    },
-	    componentWillMount: function componentWillMount() {
-	        var _this = this;
-
-	        // Get the query string data
-	        query = location.search.split('=')[1];
-
-	        // Figure out if we need to display more than one city's weather
-	        if (query !== undefined) {
-	            cities = query.split(','); // Get an array of city names
-
-	            // Set the interval to load new cities
-	            if (cities.length > 1) {
-	                setInterval(function () {
-	                    currentCity++;
-	                    if (currentCity === cities.length) {
-	                        currentCity = 0;
-	                    }
-	                    _this.fetchData(); // Reload the city every 5 seconds
-	                }, 5000);
-	            }
-	        } else {
-	            cities[0] = 'Littleton'; // Set Littleton as the default city
-	        }
-
-	        // Create a timer to clear the cache after 5 minutes, so we can get updated data from the API
-	        setInterval(function () {
-	            citiesWeather = []; // Empty the cache
-	        }, 1000 * 60 * 5);
-
-	        this.fetchData();
-	    },
-	    fetchData: function fetchData() {
-	        var _this2 = this;
-
-	        // Get the data from the cache if possible
-	        if (citiesWeather[currentCity]) {
-	            this.updateData();
-	        } else {
-	            // Request new data to the API
-	            _WeatherRequest2.default.get(cities[currentCity]).then(function (data) {
-	                citiesWeather[currentCity] = data;
-	                _this2.updateData();
-	            });
-	        }
-	    },
-	    updateData: function updateData() {
-	        // Update the data for the UI
-	        this.setState({
-	            weather: citiesWeather[currentCity].weather[0].id,
-	            temp: Math.round(citiesWeather[currentCity].main.temp - 273.15), // Kelvin to Celcius
-	            humidity: Math.round(citiesWeather[currentCity].main.humidity),
-	            wind: Math.round(citiesWeather[currentCity].wind.speed)
-	        });
-	    },
-	    render: function render() {
-	        // Build class names with dynamic data
-	        var weatherClass = classNames('wi wi-owm-' + this.state.weather);
-
-	        // Render the DOM elements
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'Weather' },
-	            _react2.default.createElement(
-	                'h1',
-	                { className: 'Weather-city' },
-	                cities[currentCity]
-	            ),
-	            _react2.default.createElement(
-	                'div',
-	                { className: 'Weather-icon' },
-	                _react2.default.createElement('i', { className: weatherClass })
-	            ),
-	            _react2.default.createElement(
-	                'section',
-	                { className: 'Weather-details' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'Weather-temp' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 'Weather-temp-number' },
-	                        this.state.temp
-	                    ),
-	                    _react2.default.createElement('span', { className: 'wi wi-degrees' })
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'Weather-wind' },
-	                    _react2.default.createElement(
-	                        'i',
-	                        { className: 'wi wi-small-craft-advisory' },
-	                        this.state.wind,
-	                        _react2.default.createElement(
-	                            'span',
-	                            { className: 'vel' },
-	                            'Km/h'
-	                        )
-	                    )
-	                )
-	            )
-	        );
-	    }
-	});
-
-/***/ },
-/* 504 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _moment = __webpack_require__(169);
-
-	var _moment2 = _interopRequireDefault(_moment);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	    displayName: 'Time',
-	    setTime: function setTime() {
-
-	        var currentTime = (0, _moment2.default)();
-	        var date = currentTime.format('MMMM Do'); // November 20th
-	        var time = currentTime.format('H:mm:ss'); // 14:16:42
-
-	        this.setState({
-	            date: date,
-	            time: time
-	        });
-	    },
-	    componentWillMount: function componentWillMount() {
-	        this.setTime();
-	    },
-	    componentDidMount: function componentDidMount() {
-	        var _this = this;
-
-	        window.setInterval(function () {
-	            _this.setTime();
-	        }, 1000);
-	    },
-	    render: function render() {
-
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'Moment-time', ref: 'timeRow' },
-	            this.state.date,
-	            _react2.default.createElement('br', null),
-	            this.state.time
-	        );
-	    }
-	});
-
-/***/ },
-/* 505 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	__webpack_require__(495);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var config = __webpack_require__(498);
-	exports.default = _react2.default.createClass({
-	    displayName: 'Travel',
-	    componentWillMount: function componentWillMount() {
-
-	        this.options = config.travel;
-
-	        this.updateData();
-	    },
-	    componentDidMount: function componentDidMount() {
-	        this.startPolling();
-	    },
-	    getTravelUrl: function getTravelUrl() {
-	        return 'https://www.google.com/maps/embed/v1/directions?key=' + this.options.key + '&origin=' + this.options.origin + '&destination=' + this.options.work;
-	    },
-	    setTravelUrl: function setTravelUrl(origin, destination) {
-	        this.options.origin = origin;
-	        this.options.destination = destination;
-	    },
-
-
-	    /**
-	     * Setup options, object literal w/ width and height as params
-	     * @param dimensions
-	     */
-	    setDimensions: function setDimensions(dimensions) {
-	        this.options.dimensions = dimensions;
-	    },
-	    updateData: function updateData() {
-
-	        var dimensions = this.options.dimensions;
-	        // We have to empty out url for it to refresh the dom
-	        this.setState({
-	            url: '',
-	            dimensions: dimensions
-	        });
-
-	        this.setState({
-	            url: this.getTravelUrl(),
-	            dimensions: dimensions
-	        });
-	    },
-	    startPolling: function startPolling() {
-	        var _this = this;
-
-	        // Every minute reset url to get latest travel time
-	        var interval = 1000 * 60;
-
-	        this.interval = setInterval(function () {
-	            _this.updateData();
-	        }, interval);
-	    },
-	    render: function render() {
-
-	        return _react2.default.createElement(
-	            'div',
-	            { className: 'Travel' },
-	            _react2.default.createElement('iframe', { className: 'Travel-iframe', id: 'Travel-iframe', src: this.state.url, width: this.state.dimensions.width, height: this.state.dimensions.height })
-	        );
-	    },
-	    componentWillUnmount: function componentWillUnmount() {
-	        clearInterval(this.interval);
-	    }
-	});
 
 /***/ }
 /******/ ]);

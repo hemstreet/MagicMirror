@@ -14,7 +14,7 @@ export default React.createClass({
         this.setupListeners();
     },
     setupListeners() {
-        mediator.on(config.events.displayFlash, this.displayFlash);
+        //mediator.on(config.events.displayFlash, this.displayFlash);
     },
     displayFlash(message) {
         this.message[message] = message;
